@@ -2,29 +2,25 @@ class Solution {
 public:
 
     vector<vector<int>>result;
-    unordered_set<int>st;
-    void solve(vector<int>&temp, vector<int>&nums){
+    void solve(int idx, vector<int>&nums){
         int n=nums.size();
-        if(temp.size()==n){
-            result.push_back(temp);
+        if(idx==n){
+            result.push_back(nums);
             return;
         }
-        for(int i=0; i<n; i++){
-            if(st.find(nums[i])==st.end()){
-                temp.push_back(nums[i]);
-                st.insert(nums[i]);
+//choose an element and swap t wit every element , and do it for every element
+// aur kisi bhi element ka swapping start hoga o ussi ke index se start hoga and right ki taraf move karege
 
-                solve(temp,nums);
-
-                temp.pop_back();
-                st.erase(nums[i]);
-            }
+        for(int i=idx; i<n; i++){
+            swap(nums[i],nums[idx]); 
+            solve(idx+1,nums);
+            //backtrack
+            swap(nums[i],nums[idx]);
         }
     }
     vector<vector<int>> permute(vector<int>& nums) {
         int n=nums.size();
-        vector<int>temp;
-        solve(temp,nums);
+        solve(0,nums);
         return result;
     }
 };
