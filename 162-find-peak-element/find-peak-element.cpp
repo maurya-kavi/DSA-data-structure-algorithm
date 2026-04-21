@@ -12,6 +12,6 @@ public:
             if(nums[mid]<nums[mid+1]) l=mid+1;
             else h=mid;
         }
-        return l;
+        return h;
     }
 };
