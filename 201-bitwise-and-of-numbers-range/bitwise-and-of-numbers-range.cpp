@@ -1,13 +1,10 @@
 class Solution {
 public:
     int rangeBitwiseAnd(int left, int right) {
-        int shift_cnt=0;
-        //until prefix of left and right became equal
-        while(left<right){
-            left>>=1; //right shift of left by 1
-            right>>=1; //right shift of right by 1
-            shift_cnt++;
+        int n=right;
+        while(n>0 && n>left){
+            n=(n&(n-1));
         }
-        return left<<shift_cnt;
+        return n;
     }
 };
