@@ -1,7 +1,7 @@
 class Twitter {
 public:
     vector<pair<int,int>>feed;
-    unordered_map<int,vector<int>>mp; // for postTwwet
+    // unordered_map<int,vector<int>>mp; // for postTwwet
     unordered_map<int,set<int>>followunfollowmp;
     Twitter() {
         
@@ -9,7 +9,7 @@ public:
     
     void postTweet(int userId, int tweetId) {
         feed.push_back({userId,tweetId});
-        mp[userId].push_back(tweetId);
+        // mp[userId].push_back(tweetId);
     }
     
     vector<int> getNewsFeed(int userId) {
@@ -32,26 +32,15 @@ public:
             if(cnt==10) break;
         }
         return ans;
-
-        // int sz=feed.size();
-        // int cnt=10;
-        // vector<int>temp;
-        // for(int i=sz-1; i>=0 && cnt>0; i--,cnt--){
-        //     temp.push_back(feed[i]);
-        // }
-        // return temp;
     }
     
     void follow(int followerId, int followeeId) {
+        if(followerId==followeeId) return;
         followunfollowmp[followerId].insert(followeeId);
     }
     
     void unfollow(int followerId, int followeeId) {
-        set<int>s=followunfollowmp[followerId];
-        //search in s ki followeeId exist karta hai ya nhi
-        if(!s.count(followeeId)) return;
-        s.erase(followeeId);
-        followunfollowmp[followerId]=s;
+        followunfollowmp[followerId].erase(followeeId);
     }
 };
 
