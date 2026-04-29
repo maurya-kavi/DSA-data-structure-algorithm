@@ -11,25 +11,13 @@
  */
 class Solution {
 public:
-int maxSum=INT_MIN;
-    int maxPathFromNode(TreeNode*root){
-        if(!root) return 0;
-        int left=max(0,maxPathFromNode(root->left));
-        int right=max(0,maxPathFromNode(root->right));
-
-        return root->val + max(left,right);
-    }
-    void dfs(TreeNode*root){
-        if(!root) return;
-        int left=max(0,maxPathFromNode(root->left));
-        int right=max(0,maxPathFromNode(root->right));
-
-        int current=left+right+root->val;
-        maxSum=max(maxSum,current);
-
-// and traverse for remaining node
-        dfs(root->left);
-        dfs(root->right);
+    int maxSum = INT_MIN;
+    int dfs(TreeNode* root) {
+        if (!root) return 0;
+        int left = max(0, dfs(root->left));
+        int right = max(0, dfs(root->right));
+        maxSum = max(maxSum, root->val + left + right);
+        return root->val + max(left, right);
     }
     int maxPathSum(TreeNode* root) {
         dfs(root);
