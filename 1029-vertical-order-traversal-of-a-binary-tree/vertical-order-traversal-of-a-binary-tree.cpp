@@ -37,9 +37,7 @@ public:
             for(auto &q:p.second){
                 //q.first = row
                 //q.second= multiset<int>
-                for(int x:q.second){
-                    colNodes.push_back(x);
-                }
+                colNodes.insert(colNodes.end(), q.second.begin(), q.second.end());
             }
             result.push_back(colNodes);
         }
