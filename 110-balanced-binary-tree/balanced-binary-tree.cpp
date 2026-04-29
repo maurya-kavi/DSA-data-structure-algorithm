@@ -11,17 +11,17 @@
  */
 class Solution {
 public:
-bool found=true;
     bool isBalanced(TreeNode* root) {
-        checkHeight(root);
-        return found;
+        return checkHeight(root) !=-1;
 
     }
     int checkHeight(TreeNode*root){
         if(!root) return 0;
         int right=checkHeight(root->right);
+        if(right==-1) return -1;
         int left=checkHeight(root->left);
-        if(abs(left-right)>1) found=false;
+        if(left==-1) return -1;
+        if(abs(left-right)>1) return -1;
         return max(left,right)+1;
     }
 };
