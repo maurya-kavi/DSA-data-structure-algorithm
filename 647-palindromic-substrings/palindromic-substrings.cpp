@@ -1,20 +1,26 @@
 class Solution {
-public:
+public: 
+// let do some optimization
     int countSubstrings(string s) {
         int n=s.size();
         int cnt=0;
-        for(int i=0; i<n; i++){
-            for(int j=i; j<n; j++){
-                bool found=true;
-                int l=i, r=j;
-                while(l<=r){
-                    if(s[l]!=s[r]){ found=false; break;}
-                    l++;
-                    r--;
-                }
-                if(found) cnt++;
+
+        // lambda function
+        auto expandAroundCenter = [&](int left, int right){
+            while(left>=0 && right<n && s[left]==s[right]){
+                cnt++;
+                left--;
+                right++;
             }
+        };
+
+        for(int i=0; i<n; i++){
+            // for odd len  palindrome
+            expandAroundCenter(i,i);
+            //for even len palindrome
+            expandAroundCenter(i,i+1);
         }
+
         return cnt;
     }
 };
