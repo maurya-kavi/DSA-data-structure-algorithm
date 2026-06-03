@@ -1,9 +1,14 @@
 # Write your MySQL query statement below
 
-select customer_id from (
-    select  customer_id,
-    count(distinct product_key) as cnt
-    from customer
-    group by customer_id
-) as subquery
-where subquery.cnt=(select count(product_key) as totCnt from product)
+-- select customer_id from (
+--     select  customer_id,
+--     count(distinct product_key) as cnt
+--     from customer
+--     group by customer_id
+-- ) as subquery
+-- where subquery.cnt=(select count(product_key) as totCnt from product)
+
+#using having clause
+select customer_id from customer
+group by customer_id
+having count(distinct product_key) = (select count(*) from product )
