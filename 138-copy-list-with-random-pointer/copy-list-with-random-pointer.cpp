@@ -20,19 +20,33 @@ public:
         if(!head) return nullptr;
         unordered_map<Node*,Node*>mp;
         Node*curr=head;
+        Node*newHead=nullptr;
+        Node*prev=nullptr;
         while(curr){
-            mp[curr]=new Node(curr->val); // create all node and stroe the relation in the map
+            Node*temp=new Node(curr->val);
+            mp[curr]=temp;
+            if(newHead==NULL){
+                newHead=temp;
+                prev=temp;
+            }else{
+                prev->next=temp;
+                prev=prev->next;
+            }
             curr=curr->next;
         }
 
-        // now assign next and random
+        // fill the random node
         curr=head;
+        Node*newCurr=newHead;
         while(curr){
-            mp[curr]->next=mp[curr->next];
-            mp[curr]->random=mp[curr->random];
-
+            if(curr->random==NULL){
+                newCurr->random=NULL;
+            }else{
+                newCurr->random=mp[curr->random];
+            }
             curr=curr->next;
+            newCurr=newCurr->next;
         }
-        return mp[head];
+        return newHead;
     }
 };
