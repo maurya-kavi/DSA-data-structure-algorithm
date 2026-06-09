@@ -8,7 +8,7 @@ public:
         size.resize(n+1);
         for(int i=0; i<=n; i++) {
             parent[i]=i;
-            size[i]=i;
+            size[i]=1;
         }
     }
     // fun to find ultimate parent with path compression
