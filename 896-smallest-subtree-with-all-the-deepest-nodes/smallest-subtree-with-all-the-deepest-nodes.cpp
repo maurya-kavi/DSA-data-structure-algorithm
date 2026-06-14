@@ -11,28 +11,30 @@
  */
 class Solution {
 public:
-unordered_map<TreeNode*,int>mp;
-int mxd=0;
-    void depth(TreeNode*root, int d){
-        if(!root) return;
-        mxd=max(mxd,d);
-        mp[root]=d;
-        depth(root->left,d+1);
-        depth(root->right,d+1);
-    }
-    TreeNode* lca(TreeNode*root){
-        if(!root) return NULL;
-        if(mp[root]==mxd){
-            return root;
-        }
-        TreeNode*left=lca(root->left);
-        TreeNode*right=lca(root->right);
+// second approach
+pair<int,TreeNode*> solve(TreeNode*root){
+        if(!root) return {0,NULL};
 
-        if(left && right) return root;
-        return left?left:right; // if left then return the left , else if right is then return the right , if left is null and right is also null then return the right which is null too.
+        pair<int,TreeNode*>left=solve(root->left);
+        pair<int,TreeNode*>right=solve(root->right);
+
+        if(left.second && right.second) {
+            if(left.first==right.first) return {left.first+1,root};
+            else if(left.first>right.first){
+                return {left.first+1,left.second};
+            }else{
+                return {right.first+1,right.second};
+            }
+        }
+        else if(left.second){
+            return {left.first+1,left.second};
+        }
+        else if(right.second){
+            return {right.first+1,right.second};
+        }
+        else return {left.first+1,root};
     }
     TreeNode* subtreeWithAllDeepest(TreeNode* root) {
-        depth(root,0);
-        return lca(root);
+        return solve(root).second;
     }
 };
