@@ -11,17 +11,18 @@
  */
 class Solution {
 public:
-int maxDiff=0;
+
     int maxAncestorDiff(TreeNode* root) {
-        dfs(root);
+        int maxDiff=0;
+        dfs(root,maxDiff);
         return maxDiff;
     }
 private:
-    pair<int,int>dfs(TreeNode*root){
+    pair<int,int>dfs(TreeNode*root,int &maxDiff){
         if(!root) return {INT_MAX,INT_MIN}; // {min,max}
 
-        pair<int,int>left=dfs(root->left);
-        pair<int,int>right=dfs(root->right);
+        pair<int,int>left=dfs(root->left,maxDiff);
+        pair<int,int>right=dfs(root->right,maxDiff);
 
         int childMin=min(left.first,right.first);
         int childMax=max(left.second,right.second);
