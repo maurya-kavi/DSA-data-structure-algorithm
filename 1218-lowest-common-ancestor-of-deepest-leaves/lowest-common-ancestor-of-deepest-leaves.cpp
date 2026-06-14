@@ -11,33 +11,31 @@
  */
 class Solution {
 public:
-unordered_map<TreeNode*,int>mp;
-    void depth(TreeNode*root, int d){
-        if(!root) return;
-        mp[root]=d;
-        depth(root->left,d+1);
-        depth(root->right,d+1);
-    }
-    TreeNode* lca(TreeNode*root, int &mxd){
-        if(!root) return NULL;
-        if(mp[root]==mxd){
-            return root;
+    pair<int,TreeNode*> solve(TreeNode*root){
+        if(!root) return {0,NULL};
+
+        pair<int,TreeNode*>left=solve(root->left);
+        pair<int,TreeNode*>right=solve(root->right);
+
+        if(left.second && right.second) {
+            if(left.first==right.first) return {left.first+1,root};
+            else if(left.first>right.first){
+                return {left.first+1,left.second};
+            }else{
+                return {right.first+1,right.second};
+            }
         }
-        TreeNode*left=lca(root->left,mxd);
-        TreeNode*right=lca(root->right,mxd);
-
-        if(left && right) return root;
-        else if(left) return left;
-        else if(right) return right;
-        else return NULL;
+        else if(left.second){
+            return {left.first+1,left.second};
+        }
+        else if(right.second){
+            return {right.first+1,right.second};
+        }
+        else return {left.first+1,root};
     }
+    
     TreeNode* lcaDeepestLeaves(TreeNode* root) {
-        depth(root,0);
-        int mxd=0;
-        for(auto [key,val]:mp) mxd=max(mxd,val);
-        // then use the same logic of lca
-        return lca(root,mxd);
-
+        return solve(root).second;
     }
 };
 
