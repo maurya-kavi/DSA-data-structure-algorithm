@@ -3,8 +3,6 @@ public:
     struct trieNode{
         bool isEndOfWord;
         trieNode*children[26];
-        int ind;
-        int sz;
     };
 
     trieNode*getNode(){
@@ -13,8 +11,6 @@ public:
             newNode->children[i]=NULL;
         }
         newNode->isEndOfWord=false;
-        newNode->ind=-1;
-        newNode->sz=INT_MAX;
         return newNode;
     }
 
@@ -27,15 +23,6 @@ public:
                 crawler->children[idx]=getNode();
             }
             crawler=crawler->children[idx];
-            if(crawler->sz==INT_MAX){
-                crawler->sz=n;
-                crawler->ind=i;
-            }else{
-                if(crawler->sz>n){
-                    crawler->sz=n;
-                    crawler->ind=i;
-                }
-            }
         }
         crawler->isEndOfWord=true;
     }
