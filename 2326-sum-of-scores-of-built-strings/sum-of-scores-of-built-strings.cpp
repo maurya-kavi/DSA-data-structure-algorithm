@@ -1,48 +1,39 @@
 class Solution {
 public:
-    // implemented using KMP algo + dp
+    // implemented using z-algo
     long long sumScores(string s) {
         int n = s.length();
         if (n == 0) return 0;
 
-        // Build the pi table (LPS array)
-        vector<int> lps(n, 0);
-        int len = 0;
-        int i = 1;
+        vector<int> z(n, 0);
+        int l = 0, r = 0;
         
-        while (i < n) {
-            if (s[i] == s[len]) {
-                len++;
-                lps[i] = len;
-                i++;
-            } else {
-                if (len != 0) {
-                    len = lps[len - 1]; // Fall back to the previous echo
-                } else {
-                    lps[i] = 0;
-                    i++;
-                }
-            }
-        }
-        
-        //  DP on the pi table to count prefix echoes
-        long long totalScore = 0;
-        vector<long long> dp(n, 0);
-        
-        for (int j = 0; j < n; j++) {
-            // Every index inherently ends exactly one full prefix: the substring S[0...j]
-            dp[j] = 1;
-            
-            // If the LPS array tells us a smaller, proper prefix also ends here,
-            // we inherit all the echoes from that prefix's ending index.
-            if (lps[j] > 0) {
-                dp[j] += dp[lps[j] - 1];
+        // The score of the full string itself is always its total length.
+        long long totalScore = n; 
+
+        // Calculate the Z-array for all suffixes starting from index 1
+        for (int i = 1; i < n; i++) {
+            // If 'i' is inside the known mirrored window, we can fast-forward
+            // by taking the minimum of the remaining window length or the previously computed Z-value
+            if (i <= r) {
+                z[i] = min(r - i + 1, z[i - l]);
             }
             
-            // Add the total number of prefixes ending at index j to the grand total
-            totalScore += dp[j];
+            // Try to stretch the vision further beyond our current limits
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                z[i]++;
+            }
+            
+            // If we pushed the boundary further right, update the window [L, R]
+            if (i + z[i] - 1 > r) {
+                l = i;
+                r = i + z[i] - 1;
+            }
+            
+            // The Z-value is exactly the score for this suffix. Add it instantly.
+            totalScore += z[i];
         }
-        
+
         return totalScore;
 
     }
