@@ -11,7 +11,10 @@
  */
 class Solution {
 public:
+vector<TreeNode*> dp[9][9];
+bool vis[9][9];
     vector<TreeNode*> generateTrees(int n) {
+        memset(vis,false,sizeof(vis));
         if(n==0)  return {};
         return solve(1,n);
     }
@@ -30,6 +33,11 @@ public:
             return res;
         }
 
+        if(vis[s][e])
+            return dp[s][e];
+
+        vis[s][e] = true;
+
         for(int i=s; i<=e; i++){
             vector<TreeNode*>leftTree=solve(s,i-1);
             vector<TreeNode*>rightTree=solve(i+1,e);
@@ -46,7 +54,7 @@ public:
             }
         }
 
-        return res;
+        return dp[s][e]=res;
     }
 };
 
