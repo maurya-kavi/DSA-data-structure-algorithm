@@ -1,58 +1,57 @@
 class Solution {
 public:
-const int mod=1e9+7;
-int dp[10][5001];
-    int knightDialer(int n) {
-        vector<vector<int>>v(10);
-        v[0].push_back(4);
-        v[0].push_back(6);
-        v[1].push_back(6);
-        v[1].push_back(8);
-        v[2].push_back(9);
-        v[2].push_back(7);
-        v[3].push_back(4);
-        v[3].push_back(8);
-        v[4].push_back(0);
-        v[4].push_back(3);
-        v[4].push_back(9);
-        // v[5].push_back({});
-        v[6].push_back(0);
-        v[6].push_back(1);
-        v[6].push_back(7);
-        v[7].push_back(2);
-        v[7].push_back(6);
-        v[8].push_back(1);
-        v[8].push_back(3);
-        v[9].push_back(2);
-        v[9].push_back(4);
+// using matrix exponentiation
+    const int MOD = 1e9 + 7;
+    typedef vector<vector<long long>> Matrix;
 
-        memset(dp,-1,sizeof(dp));
-
-        int ans=0;
-        for(int i=0; i<10; i++){
-            ans=(ans+solve(i,n,v))%mod;
+    Matrix multiply(Matrix& A, Matrix& B) {
+        Matrix C(10, vector<long long>(10, 0));
+        for(int i = 0; i < 10; ++i) {
+            for(int j = 0; j < 10; ++j) {
+                for(int k = 0; k < 10; ++k) {
+                    C[i][j] = (C[i][j] + A[i][k] * B[k][j]) % MOD;
+                }
+            }
         }
-        return ans;
-        
+        return C;
     }
 
-    int solve(int i, int n, vector<vector<int>>&v){
-        if(n==1) return 1;
-        if(dp[i][n]!=-1) return dp[i][n];
-        int cnt=0;
-        for(auto &val:v[i]){
-            cnt=(cnt+solve(val,n-1,v))%mod;
+    Matrix matrixPower(Matrix A, int p) {
+        Matrix res(10, vector<long long>(10, 0));
+        for(int i = 0; i < 10; ++i) res[i][i] = 1;
+
+        while(p > 0) {
+            if(p % 2 == 1) res = multiply(res, A);
+            A = multiply(A, A);
+            p /= 2;
         }
-        return dp[i][n]=cnt;
+        return res;
+    }
+
+    int knightDialer(int n) {
+        if (n == 1) return 10;
+
+        Matrix M(10, vector<long long>(10, 0));
+        vector<vector<int>> moves = {
+            {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+            {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4}
+        };
+
+        for(int i = 0; i < 10; ++i) {
+            for(int nxt : moves[i]) {
+                M[i][nxt] = 1; 
+            }
+        }
+
+        Matrix M_n_minus_1 = matrixPower(M, n - 1);
+
+        long long ans = 0;
+        for(int i = 0; i < 10; ++i) {
+            for(int j = 0; j < 10; ++j) {
+                ans = (ans + M_n_minus_1[i][j]) % MOD;
+            }
+        }
+
+        return ans;
     }
 };
-
-
-
-
-
-
-
-
-
-
