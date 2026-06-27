@@ -1,25 +1,25 @@
 class Solution {
 public:
+int dp[2505][2505];
     int lengthOfLIS(vector<int>& nums) {
-        // here we will do in 0(nlogn) TC , using the Binary search algo
+        memset(dp,-1,sizeof(dp));
         int n=nums.size();
-        vector<int>temp;
-        temp.push_back(nums[0]);
+        return solve(0,-1,nums);
+    }
 
-        for(int i=1; i<n; i++){
-            if(nums[i]>temp.back()){
-                temp.push_back(nums[i]);
-            }
-            else{
-                int ind=lower_bound(temp.begin(), temp.end(),nums[i])-temp.begin();
-                temp[ind]=nums[i];
-            }
+    int solve(int i, int prev, vector<int>&nums){
+        if(i==nums.size()) return 0;
+        
+        if(dp[i][prev+1]!=-1) return dp[i][prev+1];
+        //take 
+        int take=0;
+        if(prev==-1 || nums[prev]<nums[i]){
+            take=1+solve(i+1, i,nums);
         }
-        return temp.size();
 
-        // Intution:
-        // instead of buiding all the incresing subsequence,
-        // just update the value in the temp array 
-        // temp will not give us the LIS values but their size will give the LIS.
+        // not take
+        int notake=solve(i+1,prev,nums);
+
+        return dp[i][prev+1]= max(take,notake);
     }
 };
