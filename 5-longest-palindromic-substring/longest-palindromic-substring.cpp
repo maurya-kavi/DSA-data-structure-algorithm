@@ -1,6 +1,5 @@
 class Solution {
 public:
-// here is my dp solution, which is very similar to the problem like LCS , longest common subsequence
 
     string longestPalindrome(string s) {
         int n = s.size();
