@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(!root) return 0;
+        if(root->left==NULL && root->right==NULL) {
+            return 0;
+        }
+        int sum=0;
+
+        TreeNode*curr=root;
+
+        queue<TreeNode*>q;
+        q.push(curr);
+
+
+
+        while(!q.empty()){
+            TreeNode* node=q.front();
+            q.pop();
+            if(node->left) {
+                if(node->left->left==NULL && node->left->right==NULL){
+                    sum+=node->left->val;
+                }else{
+                    q.push(node->left);
+                }
+            }
+
+            if(node->right){
+                if(node->right->left==NULL && node->right->right==NULL){
+                    
+                }else{
+                    q.push(node->right);
+                }
+            }
+            
+        }
+        return sum;
+    }
+};
