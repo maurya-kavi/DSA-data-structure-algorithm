@@ -11,6 +11,38 @@
  */
 class Solution {
 public:
+using ll=long long;
+    int pathSum(TreeNode* root, int targetSum) {
+        if(root==NULL) return 0;
+
+        unordered_map<ll,ll>mp;
+        mp[0]=1;
+
+        return solve(root,0, targetSum, mp);
+        
+    }
+
+    int solve(TreeNode*root, ll runningSum, ll targetSum, unordered_map<ll,ll>&mp){
+        if(!root) return 0;
+
+        runningSum+=root->val;
+        ll cnt=mp[runningSum-targetSum];
+        // if(mp.count(runningSum-targetSum) && mp[runningSum-targetSum]==1) cnt+=mp[runningSum-targetSum];
+        mp[runningSum]++;
+
+        cnt+=solve(root->left, runningSum, targetSum,mp);
+        cnt+=solve(root->right, runningSum, targetSum,mp);
+
+        mp[runningSum]--;
+
+        return cnt;
+    }
+};
+
+/* -----recursive solution (two function approach)
+TC: n*(n+1)/2 = approx (n^2);
+class Solution {
+public:
     int pathSum(TreeNode* root, int targetSum) {
         if(root==NULL) return 0;
 
@@ -29,3 +61,4 @@ public:
 
     }
 };
+*/
