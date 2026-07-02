@@ -1,7 +1,35 @@
 class Solution {
 public:
     int longestWPI(vector<int>& hours) {
-        int n=hours.size();
+        unordered_map<int,int>mp;
+        int ans=0;
+        int score=0;
+int n=hours.size();
+
+        for(int i=0; i<n; i++){
+            if(hours[i]>8) score++;
+            else score--;
+
+            if(score>0) ans=max(ans, i+1);
+            else{
+                if(mp.find(score)==mp.end()){
+                    mp[score]=i;
+                }
+
+                if(mp.find(score-1)!=mp.end()){
+                    ans=max(ans, i-mp[score-1]);
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+
+
+// naive approach 
+/*
+int n=hours.size();
         vector<int>a(n);
         for(int i=0; i<n; i++){
             if(hours[i]>8) a[i]=1;
@@ -22,5 +50,4 @@ int ans=0;
             }
         }
 return ans;
-    }
-};
+*/
