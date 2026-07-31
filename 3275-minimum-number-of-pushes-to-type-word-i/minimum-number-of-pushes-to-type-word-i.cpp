@@ -8,7 +8,7 @@ public:
         vector<int>fre;
         for(auto [key,f]:mp) fre.push_back(f);
 
-        sort(fre.begin(), fre.end());
+        sort(fre.rbegin(), fre.rend());
         int cnt=0;
         int ans=0;
         for(int i=0; i<fre.size(); i++){
