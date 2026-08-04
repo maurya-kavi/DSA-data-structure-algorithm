@@ -1,15 +1,28 @@
 class Solution {
 public:
+// recursion + memoization
+vector<int>dp;
     bool winnerSquareGame(int n) {
-        vector<bool> dp(n + 1, false);
-        for (int i = 1; i <= n; ++i) {
-            for (int k = 1; k * k <= i; ++k) {
-                if (!dp[i - k * k]) {
-                    dp[i] = true;
-                    break;
-                }
+        dp.assign(n+1,-1);
+        return solve(n);
+    }
+
+    bool solve(int n){
+        if(n==0) return false;
+
+        if(dp[n]!=-1) return dp[n]==1;
+
+        for(int i=1; i*i<=n; i++){
+            // Agar ek bhi move samne wale ko losing state mein daal de
+            if(solve(n-i*i)==false){
+                dp[n]=1; // current player jeet gya
+                return true;
             }
         }
-        return dp[n];
+
+        // Agar koi bhi move se samne wala nahi haarta, toh current player haar jayega
+        dp[n] = 0;
+        return false;
+
     }
 };
