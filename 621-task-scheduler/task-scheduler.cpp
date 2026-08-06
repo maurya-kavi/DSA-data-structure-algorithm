@@ -1,37 +1,33 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        unordered_map<char,int>mp;
-        priority_queue<int>pq; //max-heap
-        int sz=tasks.size();
-        for(char ch:tasks){
-            mp[ch]++;
-        }
-        for(auto [key,val]:mp){
-            pq.push(val); // freq, char
-        }
-        int time=0;
-        while(!pq.empty()){
-            vector<int>temp;
-            int cycle=n+1;
-            int i=0;
-            while(i<cycle && !pq.empty()){
-                int cnt=pq.top();
-                pq.pop();
-                cnt--;
-                if(cnt>0){
-                    temp.push_back(cnt);
-                }
-                time++;
-                i++;
-            }
-            for(int num:temp){
-                pq.push(num);
-            }
-            if(pq.empty()) break;
+        vector<int>fre(26,0);
+        for(char ch:tasks) fre[ch-'A']++;
 
-            time+=(cycle-i);
+        priority_queue<pair<int,int>>pq;
+        queue<tuple<int,int,int>>q; //tm,fre,char
+        for(int i=0; i<26; i++){
+            if(fre[i]!=0){
+                pq.push({fre[i],i});
+            }
         }
-        return time;
+int tm=0;
+        while(!pq.empty() || !q.empty()){
+            if(!q.empty()){
+                auto [t,f,i]=q.front();
+                if(tm==t){
+                    q.pop();
+                    pq.push({f,i});
+                }
+            }
+
+            if(!pq.empty()){
+                auto [f,i]=pq.top();
+                pq.pop();
+                if(f-1>0) q.push({tm+n+1,f-1,i});
+            }
+            tm++;
+        }
+        return tm;
     }
 };
