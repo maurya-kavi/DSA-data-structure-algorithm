@@ -1,14 +1,19 @@
 class Solution {
 public:
     bool stoneGameIX(vector<int>& stones) {
-        int f[3] = {0, 0, 0};
+        int c0=0, c1=0, c2=0;
+        for(int i=0; i<(int)stones.size(); i++){
+            if(stones[i]%3==0) c0++;
+            else if(stones[i]%3==1) c1++;
+            else c2++;
+        }
 
-        for (auto& s : stones)
-            f[s % 3]++;
+        if(c0%2==0){
+            //c0 is even
+            return (c1>=1 && c2>=1) && (c1>=c2 || c2>=1);
+        }
 
-        if (~f[0] & 1)
-            return min(f[1], f[2]) >= 1;
-
-        return abs(f[1] - f[2]) >= 3;
+        //else 
+        return (abs(c1-c2)>=3);
     }
 };
