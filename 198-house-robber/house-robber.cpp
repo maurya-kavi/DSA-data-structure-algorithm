@@ -1,15 +1,20 @@
 class Solution {
 public:
-// tabulation 
+int dp[101];
     int rob(vector<int>& nums) {
         int n=nums.size();
-        if(n==1) return nums[0];
-        vector<int>dp(n+1,0);
-        dp[1]=nums[0];
-        dp[2]=max(nums[0],nums[1]);
-        for(int i=3; i<=n; i++){
-            dp[i]=max(dp[i-1], nums[i-1]+dp[i-2]);
-        }
-        return dp[n];
+        memset(dp,-1,sizeof(dp));
+        return solve(0,n, nums);
+    }
+
+    int solve(int i, int n, vector<int>&nums){
+        if(i>=n) return 0;
+if(dp[i]!=-1) return dp[i];
+        // if take
+        int take=nums[i]+solve(i+2,n, nums);
+
+        int nottake=solve(i+1,n, nums);
+
+        return dp[i]= max(take, nottake);
     }
 };
