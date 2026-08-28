@@ -1,53 +1,48 @@
 class Solution {
+
+    // recursive approach 
+    bool solve(int i, bool greater, string& curr, vector<int>& cnt, const string& t, int n, string& res) {
+        if (i == n) {
+            if (greater || n > t.length()) {
+                res = curr;
+                return true;
+            }
+            return false;
+        }
+        
+        for (int c = 0; c < 26; c++) {
+            if (cnt[c] > 0) {
+                char ch = c + 'a';
+                bool nxt = greater;
+                
+                if (!greater) {
+                    if (i < t.length()) {
+                        if (ch < t[i]) continue;
+                        if (ch > t[i]) nxt = true;
+                    } else {
+                        nxt = true;
+                    }
+                }
+                
+                cnt[c]--;
+                curr.push_back(ch);
+                
+                if (solve(i + 1, nxt, curr, cnt, t, n, res)) return true;
+                
+                curr.pop_back();
+                cnt[c]++;
+            }
+        }
+        return false;
+    }
+    
 public:
     string lexGreaterPermutation(string s, string t) {
-       int n = s.length(), m = t.length();
         vector<int> cnt(26, 0);
         for (char c : s) cnt[c - 'a']++;
         
-        int i = 0;
-        while (i < n && i < m && cnt[t[i] - 'a'] > 0) {
-            cnt[t[i] - 'a']--;
-            i++;
-        }
-        
-        if (i < n && i < m) {
-            // ab dekho kya t[i] se greater element hai in s jiska cnt >0 ho?
-            for (int c = t[i] - 'a' + 1 ; c < 26; c++) {
-                if (cnt[c] > 0) {
-                    string res = t.substr(0, i) + (char)('a' + c);
-                    cnt[c]--;
-                    for (int j = 0; j < 26; j++) res += string(cnt[j], 'a' + j);
-                    return res;
-                }
-            }
-        } 
-        // dono string equal size ka rahega given hai , 
-
-        // else if (i == m && i < n) {
-        //     for (int c = 0; c < 26; c++) {
-        //         if (cnt[c] > 0) {
-        //             string res = t.substr(0, i) + (char)('a' + c);
-        //             cnt[c]--;
-        //             for (int j = 0; j < 26; j++) res += string(cnt[j], 'a' + j);
-        //             return res;
-        //         }
-        //     }
-        // }
-        
-        while (i > 0) {
-            i--;
-            cnt[t[i] - 'a']++;
-            for (int c = t[i] - 'a' + 1; c < 26; c++) {
-                if (cnt[c] > 0) {
-                    string res = t.substr(0, i) + (char)('a' + c);
-                    cnt[c]--;
-                    for (int j = 0; j < 26; j++) res += string(cnt[j], 'a' + j);
-                    return res;
-                }
-            }
-        }
-        
-        return "";
+        string curr = "", res = "";
+        solve(0, false, curr, cnt, t, s.length(), res);
+        return res;
     }
 };
