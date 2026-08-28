@@ -12,7 +12,7 @@ public:
         }
         
         if (i < n && i < m) {
-            for (int c = t[i] - 'a' + 1; c < 26; c++) {
+            for (int c = t[i] - 'a' ; c < 26; c++) {
                 if (cnt[c] > 0) {
                     string res = t.substr(0, i) + (char)('a' + c);
                     cnt[c]--;
