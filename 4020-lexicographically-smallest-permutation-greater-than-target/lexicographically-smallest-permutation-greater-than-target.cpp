@@ -12,7 +12,8 @@ public:
         }
         
         if (i < n && i < m) {
-            for (int c = t[i] - 'a' ; c < 26; c++) {
+            // ab dekho kya t[i] se greater element hai in s jiska cnt >0 ho?
+            for (int c = t[i] - 'a' + 1 ; c < 26; c++) {
                 if (cnt[c] > 0) {
                     string res = t.substr(0, i) + (char)('a' + c);
                     cnt[c]--;
@@ -20,16 +21,19 @@ public:
                     return res;
                 }
             }
-        } else if (i == m && i < n) {
-            for (int c = 0; c < 26; c++) {
-                if (cnt[c] > 0) {
-                    string res = t.substr(0, i) + (char)('a' + c);
-                    cnt[c]--;
-                    for (int j = 0; j < 26; j++) res += string(cnt[j], 'a' + j);
-                    return res;
-                }
-            }
-        }
+        } 
+        // dono string equal size ka rahega given hai , 
+
+        // else if (i == m && i < n) {
+        //     for (int c = 0; c < 26; c++) {
+        //         if (cnt[c] > 0) {
+        //             string res = t.substr(0, i) + (char)('a' + c);
+        //             cnt[c]--;
+        //             for (int j = 0; j < 26; j++) res += string(cnt[j], 'a' + j);
+        //             return res;
+        //         }
+        //     }
+        // }
         
         while (i > 0) {
             i--;
