@@ -1,49 +1,38 @@
-#include <vector>
-#include <algorithm>
-
-using namespace std;
-
 class Solution {
 public:
     vector<int> lexicographicallySmallestArray(vector<int>& nums, int limit) {
-        int n = nums.size();
-        
-        // Pair elements with their original indices
-        vector<pair<int, int>> val_idx(n);
-        for (int i = 0; i < n; ++i) {
-            val_idx[i] = {nums[i], i};
+        vector<int>v=nums;
+        int n=nums.size();
+        sort(v.begin(), v.end());
+
+        int groupNum=0;
+        unordered_map<int,int>numToGroup; // kon si element kis group mein belong karega
+
+        numToGroup[v[0]]=groupNum; // first element in the group number 0
+
+        unordered_map<int,list<int>>groupToList; // in any group -> kon kon se element hain
+        // list is implemented using doubly linked list that provide the 0(1) TC to access pop/push in the begining or pop/push in the end
+
+        groupToList[groupNum].push_back(v[0]);
+
+        for(int i=1; i<n; i++){
+            if(abs(v[i]-v[i-1])>limit){
+                groupNum++;
+
+            }
+
+            numToGroup[v[i]]=groupNum;
+            groupToList[groupNum].push_back(v[i]);
         }
-        
-        // Sort by value to easily find groups
-        sort(val_idx.begin(), val_idx.end());
-        
-        vector<int> ans(n);
-        int i = 0;
-        
-        // Grouping logic
-        while (i < n) {
-            int j = i + 1;
-            // Expand the current group as long as the difference is <= limit
-            while (j < n && val_idx[j].first - val_idx[j - 1].first <= limit) {
-                j++;
-            }
-            
-            // Extract and sort the original indices of this specific group
-            vector<int> indices;
-            for (int k = i; k < j; ++k) {
-                indices.push_back(val_idx[k].second);
-            }
-            sort(indices.begin(), indices.end());
-            
-            // Assign the sorted values to the sorted indices
-            for (int k = 0; k < indices.size(); ++k) {
-                ans[indices[k]] = val_idx[i + k].first;
-            }
-            
-            // Move to the start of the next group
-            i = j; 
+
+        vector<int>res(n);
+        for(int i=0; i<n; i++){
+            int num=nums[i];
+            int group=numToGroup[num];
+            res[i]=*groupToList[group].begin();
+            groupToList[group].pop_front();
         }
-        
-        return ans;
+
+        return res;
     }
 };
