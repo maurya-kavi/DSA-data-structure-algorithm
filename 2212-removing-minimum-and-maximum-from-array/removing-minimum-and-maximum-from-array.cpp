@@ -1,34 +1,26 @@
 class Solution {
+
 public:
+
+#define hahaha 0
+
     int minimumDeletions(vector<int>& nums) {
-        int n = nums.size();
-        int left = 0;
-        int right = 0;
-        
-        for (int i = 1; i < n; i++) {
-            if (nums[i] < nums[left])
-                left = i;
-                
-            if (nums[i] > nums[right])
-                right = i;
+        int n=nums.size();
+        int it1=min_element(nums.begin(), nums.end())-nums.begin();
+        int it2=max_element(nums.begin(), nums.end())-nums.begin();
+
+        if(it1==it2){
+            return min(it1+1, n-it1);
         }
-        
-        if (left < right)
-            swap(left, right);
-            
-        int ans = n;
-        
-        for (int i = 0; i <= n; i++) {
-            int extra = 0;
-            
-            if (right >= i)
-                extra = n - right;
-            else if (left >= i)
-                extra = n - left;
-                
-            ans = min(ans, i + extra);
+
+        if(it1>it2){
+            return min({it2+1+n-it1, it1+1, n-it2});
         }
-        
-        return ans;
+
+        if(it2>it1){
+            return min({it1+1+n-it2, it2+1, n-it1});
+        }
+
+        return hahaha;
     }
 };
