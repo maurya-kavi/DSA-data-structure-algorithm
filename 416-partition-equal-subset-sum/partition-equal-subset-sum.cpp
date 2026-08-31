@@ -1,21 +1,35 @@
 class Solution {
 public:
+
+int dp[201][20005];
+
     bool canPartition(vector<int>& nums) {
         int n=nums.size();
-        int totSum=accumulate(nums.begin(), nums.end(), 0LL);
-        int target=totSum/2;
-        if(totSum%2!=0) return false;
+        int sum=accumulate(nums.begin(), nums.end(), 0LL);
+        if(sum&1) return false;
+        int reqSum=sum/2;
+        memset(dp,-1,sizeof(dp));
 
-        // now search an subset whose sum is equal to the target
-        vector<bool>dp(target+1,false);
-        dp[0]=true;
-        for(int num:nums){
-            for(int i=target; i>=num; i--){
-                if(dp[i-num]==true){
-                    dp[i]=true;
-                }
-            }
+        return solve(0, nums, reqSum);
+    }
+
+    bool solve(int i, vector<int>&nums, int sum){
+        if(sum==0){
+            return true;
         }
-        return dp[target];
+        if(i>=nums.size()) return false;
+
+        if(dp[i][sum]!=-1) return dp[i][sum];
+
+        // take it
+        bool take=false, nottake=false;
+        if(nums[i]<=sum){
+            take=solve(i+1, nums, sum-nums[i]);
+        }
+
+        // not take
+        nottake=solve(i+1,nums, sum);
+
+        return dp[i][sum]= take | nottake;
     }
 };
