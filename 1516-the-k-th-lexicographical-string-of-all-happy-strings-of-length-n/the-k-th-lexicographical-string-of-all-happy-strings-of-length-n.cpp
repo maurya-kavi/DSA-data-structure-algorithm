@@ -1,48 +1,45 @@
 class Solution {
 public:
 
-// brute force is generate all the string with condition tha curr char is not same as the previous char
 
-vector<string >v;
+// lets optimise it , ab lexicographically hi generate karwate hain and k tak hi karwayenge and kth ko return kar denge;
 
+    string ans;
+    
     string getHappyString(int n, int k) {
-        
-        string s="";
-        char prev='{';
-        solve(n,s, prev);
-
-        sort(v.begin(), v.end());
-
-        if(v.size() < k) return {};
-
-        return v[k-1];
+        string s = "";
+        char prev = '{';
+        solve(n, s, prev, k);
+        return ans;
     }
 
-    void solve(int &n, string &s, char prev){
+    void solve(int &n, string &s, char prev, int &k) {
 
-        if(s.size()==n) {
-            v.push_back(s);
+        if(s.size() == n) {
+            k--;
+
+            if(k == 0)
+                ans = s;
+
             return;
         }
 
-        if(prev!='a') {
-            s+='a';
-            solve(n, s, 'a');
+        if(prev != 'a' && ans == "") {
+            s += 'a';
+            solve(n, s, 'a', k);
             s.pop_back();
         }
 
-        if(prev!='b'){
-             s+='b';
-            solve(n, s, 'b');
+        if(prev != 'b' && ans == "") {
+            s += 'b';
+            solve(n, s, 'b', k);
             s.pop_back();
         }
 
-        if(prev!='c'){
-            s+='c';
-            solve(n, s, 'c');
+        if(prev != 'c' && ans == "") {
+            s += 'c';
+            solve(n, s, 'c', k);
             s.pop_back();
         }
-
-
     }
 };
