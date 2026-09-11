@@ -1,4 +1,12 @@
-# Write your MySQL query statement below
-select product.product_name, sales.year, sales.price
-from sales join product
-on sales.product_id=product.product_id
+-- get column using left join 
+
+-- select * from 
+-- sales as s 
+-- left join
+-- product as p on s.product_id=p.product_id;
+
+-- get only what is asked 
+select p.Product_name, s.year, s.price from 
+sales as s 
+left join
+product as p on s.product_id=p.product_id;
