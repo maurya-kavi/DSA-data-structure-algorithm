@@ -48,6 +48,7 @@ public:
         sort(edges.begin(),edges.end()); // priority given to wt or dis
 int ans=0;// weight of mst
         // traverse in the edges and connect if not connected
+        int cntEdges=0; // a little bit of more optimization so we don't have to traverse to complete edges if we have already found the n-1 edges connecting all the nodes
         for(int i=0; i<edges.size(); i++){
             auto arr=edges[i];
             int wt=arr[0];
@@ -60,7 +61,9 @@ int ans=0;// weight of mst
             else{
                 ans+=wt;
                 dsu.unionBySize(u,v);
+                cntEdges++;
             }
+            if(cntEdges==n-1) break;
         }
 return ans;
 
