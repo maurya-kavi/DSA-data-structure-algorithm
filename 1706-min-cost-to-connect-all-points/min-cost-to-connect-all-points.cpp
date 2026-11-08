@@ -1,38 +1,70 @@
+class DSU{
+    public:
+    vector<int>parent,size;
+    DSU(int n){
+        size.resize(n,1);
+        parent.resize(n);
+        for(int i=0; i<n; i++){
+            parent[i]=i;
+        }
+    }
+    int findUPar(int node){
+        // find ultimate parent
+        if(parent[node]==node) return node;
+        return parent[node]=findUPar(parent[node]);
+    }
+    void unionBySize(int u,int v){
+        //connect node u and v
+        int parU=findUPar(u);
+        int parV=findUPar(v);
+        if(parU==parV) return ;
+        if(size[parU]>=size[parV]){
+            parent[parV]=parU;
+            size[parU]+=size[parV];
+        }else{
+            parent[parU]=parV;
+            size[parV]+=size[parU];
+        }
+    }
+    
+
+};
+
 class Solution {
 public:
-// using the prisma algorithm
     int minCostConnectPoints(vector<vector<int>>& points) {
         int n=points.size();
-        vector<vector<pair<int,int>>>adj(n);
+        DSU dsu(n);
+        vector<vector<int>>edges;
         for(int i=0; i<n; i++){
             for(int j=i+1; j<n; j++){
                 int dis=abs(points[i][0]-points[j][0])+abs(points[i][1]-points[j][1]);
-                adj[i].push_back({j,dis});
-                adj[j].push_back({i,dis});
+
+                edges.push_back({dis,i,j});    
             }
         }
-
-        // start from somewhere
-        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>>pq;
-        pq.push({0,0}); // wt,node
-        vector<bool>vis(n,false);
-        int ans=0; //mst
-        while(!pq.empty()){
-            auto [wt,node]=pq.top();
-            pq.pop();
-            
-            //pq mein ek node multiple bar present ho sakte hain because wo bahut saare aur node se connected hai , and agar ek bar pq se nikal gya hai toh baki jo same node present hai uska koi use nhi hai
-            if(vis[node]) continue;
-
-            vis[node]=true;
-            ans+=wt;
-            for(auto [ngbrNode, ngbrWt]:adj[node]){
-                if(!vis[ngbrNode]){
-                    pq.push({ngbrWt,ngbrNode});
-                }
+        
+        // in krushkal algo->sorting is required to do
+        sort(edges.begin(),edges.end()); // priority given to wt or dis
+int ans=0;// weight of mst
+        // traverse in the edges and connect if not connected
+        for(int i=0; i<edges.size(); i++){
+            auto arr=edges[i];
+            int wt=arr[0];
+            int u=arr[1];
+            int v=arr[2];
+            // lets connect node u and v if not connected
+            int parU=dsu.findUPar(u);
+            int parV=dsu.findUPar(v);
+            if(parU==parV) continue;
+            else{
+                ans+=wt;
+                dsu.unionBySize(u,v);
             }
         }
-        return ans;
+return ans;
+
+        
     }
 };
 
