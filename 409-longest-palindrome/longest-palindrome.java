@@ -8,6 +8,7 @@ class Solution {
 int ans=0;
 boolean odd=false;
         for(Map.Entry<Character,Integer>entry:mp.entrySet()){
+            char ch=entry.getKey();
             int freq=entry.getValue();
             if(freq%2==1){
                 //odd 
