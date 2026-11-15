@@ -33,3 +33,6 @@ public:
         }
     }
 };
+
+// acquire() -> Value 1 se 0 karta hai (agar 0 hai toh wait karta hai)
+// release() -> value 0 se 1 karta hai ( aur waiting thread ko jagata hai)
