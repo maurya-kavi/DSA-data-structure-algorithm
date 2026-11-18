@@ -1,60 +1,41 @@
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int n=nums1.length;
-        int m=nums2.length;
-        int left=(n+m-1)/2;
-        int i=0, j=0;
-        while(i<n && j<m && left>0){
-            if(nums1[i]<=nums2[j]) i++;
-            else j++;
-            left--;
-        }
-        while(left>0 && i<n){
-            i++;
-            left--;
-        }
-        while(left>0 && j<m){
-            j++;
-            left--;
-        }
-        int a=0;
-        if(i<n && j<m){
-            if(nums1[i]<=nums2[j]){
-                a=nums1[i];
-                i++;
-            }else{
-                a=nums2[j];
-                j++;
-            }
-        }
-        else if(i<n){
-            a=nums1[i];
-            i++;
-        }else{
-            a=nums2[j];
-            j++;
+        // Ensure nums1 is the smaller array to keep binary search bounds valid
+        if (nums1.length > nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
         }
 
-        int b=0;
-        if((n+m)%2==0){
-            if(i<n && j<m){
-                if(nums1[i]<=nums2[j]){
-                    b=nums1[i];
-                    i++;
-                }else{
-                    b=nums2[j];
-                    j++;
+        int m = nums1.length;
+        int n = nums2.length;
+        int low = 0, high = m;
+        int halfLen = (m + n + 1) / 2;
+
+        while (low <= high) {
+            int cut1 = low + (high - low) / 2;
+            int cut2 = halfLen - cut1;
+
+            int l1 = (cut1 == 0) ? Integer.MIN_VALUE : nums1[cut1 - 1];
+            int r1 = (cut1 == m) ? Integer.MAX_VALUE : nums1[cut1];
+
+            int l2 = (cut2 == 0) ? Integer.MIN_VALUE : nums2[cut2 - 1];
+            int r2 = (cut2 == n) ? Integer.MAX_VALUE : nums2[cut2];
+
+            if (l1 <= r2 && l2 <= r1) {
+                // Found the valid partition
+                if ((m + n) % 2 == 0) {
+                    return (Math.max(l1, l2) + Math.min(r1, r2)) / 2.0;
+                } else {
+                    return (double) Math.max(l1, l2);
                 }
+            } else if (l1 > r2) {
+                // Too far right in nums1; shift partition left
+                high = cut1 - 1;
+            } else {
+                // Too far left in nums1; shift partition right
+                low = cut1 + 1;
             }
-            else if(i<n){
-                b=nums1[i];
-                i++;
-            }else{
-                b=nums2[j];
-                j++;
-            }
-            return (double)(a+b)/2.0;
         }
-        return (double)(a);
+
+        return 0.0;
     }
 }
