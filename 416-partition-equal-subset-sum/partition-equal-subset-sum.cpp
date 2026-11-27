@@ -1,35 +1,25 @@
 class Solution {
 public:
-
-int dp[201][20005];
-
     bool canPartition(vector<int>& nums) {
+        int totalSum=0;
+        for(int num:nums) totalSum+=num;
+        if(totalSum%2!=0) return false;
+        int target=totalSum/2;
         int n=nums.size();
-        int sum=accumulate(nums.begin(), nums.end(), 0LL);
-        if(sum&1) return false;
-        int reqSum=sum/2;
-        memset(dp,-1,sizeof(dp));
-
-        return solve(0, nums, reqSum);
+        vector<vector<int>>dp(n, vector<int>(target+1,-1));
+        return solve(nums.size()-1,target, nums, dp);
     }
 
-    bool solve(int i, vector<int>&nums, int sum){
-        if(sum==0){
-            return true;
-        }
-        if(i>=nums.size()) return false;
-
-        if(dp[i][sum]!=-1) return dp[i][sum];
-
-        // take it
-        bool take=false, nottake=false;
-        if(nums[i]<=sum){
-            take=solve(i+1, nums, sum-nums[i]);
+    bool solve(int idx, int target, vector<int>&nums, vector<vector<int>>&dp){
+        if(target==0) return true;
+        if(idx==0) return nums[idx]==target;
+        if(dp[idx][target]!=-1) return dp[idx][target];
+        bool notake=solve(idx-1, target,nums,dp); // not take the element at index idx and move to next element
+        bool take=false;
+        if(nums[idx]<=target){
+            take=solve(idx-1, target-nums[idx], nums,dp); // taking the element at index idx in the nums
         }
 
-        // not take
-        nottake=solve(i+1,nums, sum);
-
-        return dp[i][sum]= take | nottake;
+        return dp[idx][target]= notake || take;
     }
 };
